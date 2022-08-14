@@ -8,12 +8,13 @@
 <script>
 import Panel from "@/components/Panel.vue";
 
-import { initCesium } from "@/cesiumUtils/initCesium.js";
-
+import { initCesium } from "@/cesiumUtils/initCesium"
 import {
   randomGenerateBillboards,
   destroyBillboard,
 } from "@/cesiumUtils/randPoints";
+import Roaming from '@/cesiumUtils/satelliteRoaming'
+import gerateSatelliteLines from '@/mocks/satellitePath';
 
 import { ref, onMounted } from "vue";
 
@@ -23,6 +24,7 @@ export default {
     Panel,
   },
   setup() {
+    let sat
     let viewer3D = null;
     const dialogVisible = ref(true);
     const CallBack = (active, resolve, reject) => {
@@ -32,7 +34,9 @@ export default {
         reject();
       }
     };
-
+    const back2Home = () => {
+      document.querySelector(".cesium-home-button").click();
+    };
     const btnClickHandler = (btn) => {
       const { id, active } = btn;
       switch (id) {
@@ -43,9 +47,23 @@ export default {
               randomGenerateBillboards(viewer3D, 1000);
             },
             () => {
-              destroyBillboard();
+              destroyBillboard()
+              back2Home()
             }
-          );
+          )
+          break
+        }
+        case "sat": {
+          CallBack(active, () => {
+            back2Home()
+            sat = new Roaming(viewer3D, {
+              uri: '../../public/models/Satellite.glb',
+              Lines: gerateSatelliteLines(0, 0)
+            }); 
+          }, () => {
+            sat?.EndRoaming()
+          })
+          break
         }
       }
     };
@@ -54,6 +72,7 @@ export default {
     });
 
     return {
+      back2Home,
       dialogVisible,
       btnClickHandler,
     };
