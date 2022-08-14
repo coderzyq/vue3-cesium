@@ -1,28 +1,26 @@
 <template>
-    <hello-cesium></hello-cesium>
-    <panel></panel>
+  <init-cesium></init-cesium>
 </template>
 
 <script>
-import HelloCesium from '@/components/HelloCesium'
-import Panel from '@/components/Panel'
+import InitCesium from "@/components/InitCesium";
+
 export default {
   name: "App",
   components: {
-    HelloCesium,
-    Panel
+    InitCesium,
   },
 };
 </script>
 
 <style lang="scss">
 html,
-body, 
+body,
 #app {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   margin: 0;
-  padding: 0
+  padding: 0;
 }
 </style>
