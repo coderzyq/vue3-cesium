@@ -8,15 +8,20 @@
 <script>
 import Panel from "@/components/Panel.vue";
 
-import { initCesium } from "@/cesiumUtils/initCesium"
+import { initCesium } from "@/cesiumUtils/initCesium";
 import {
   randomGenerateBillboards,
   destroyBillboard,
 } from "@/cesiumUtils/randPoints";
-import Roaming from '@/cesiumUtils/satelliteRoaming'
-import gerateSatelliteLines from '@/mocks/satellitePath';
+import { addGeoJson, removeGeoJson } from "@/cesiumUtils/geojson";
+import { setRain, setSnow, setFog } from "@/cesiumUtils/cesiumEffect";
+import { setFlyline, flyLineDestroy } from '@/cesiumUtils/flyLine'
+
+import Roaming from "@/cesiumUtils/satelliteRoaming";
+import gerateSatelliteLines from "@/mocks/satellitePath";
 
 import { ref, onMounted } from "vue";
+import { process } from "ipaddr.js";
 
 export default {
   name: "InitCesium",
@@ -24,8 +29,13 @@ export default {
     Panel,
   },
   setup() {
-    let sat
     let viewer3D = null;
+
+    let sat;
+    let rain;
+    let snow;
+    let fog;
+
     const dialogVisible = ref(true);
     const CallBack = (active, resolve, reject) => {
       if (active) {
@@ -47,22 +57,85 @@ export default {
               randomGenerateBillboards(viewer3D, 1000);
             },
             () => {
-              destroyBillboard()
-              back2Home()
+              destroyBillboard();
+              back2Home();
             }
-          )
-          break
+          );
+          break;
         }
         case "sat": {
-          CallBack(active, () => {
+          CallBack(
+            active,
+            () => {
+              back2Home();
+              sat = new Roaming(viewer3D, {
+                uri: `${process.env.VUE_APP_BUILD_PATH_PREFIX}/models/Satellite.glb`,
+                Lines: gerateSatelliteLines(0, 0),
+              });
+            },
+            () => {
+              sat?.EndRoaming();
+            }
+          );
+          break;
+        }
+        case "geojson": {
+          CallBack(
+            active,
+            () => {
+              addGeoJson(viewer3D);
+            },
+            () => {
+              back2Home();
+              removeGeoJson(viewer3D);
+            }
+          );
+          break;
+        }
+        case "rain": {
+          CallBack(
+            active,
+            () => {
+              rain = setRain(viewer3D);
+            },
+            () => {
+              viewer3D?.scene?.postProcessStages.remove(rain.rainStage);
+            }
+          );
+          break;
+        }
+        case "snow": {
+          CallBack(
+            active,
+            () => {
+              snow = setSnow(viewer3D);
+            },
+            () => {
+              viewer3D?.scene?.postProcessStages.remove(snow.snowStage);
+              // snow.destroy()
+            }
+          );
+          break;
+        }
+        case "fog": {
+          CallBack(
+            active,
+            () => {
+              fog = setFog(viewer3D);
+            },
+            () => {
+              viewer3D?.scene?.postProcessStages.remove(fog.fogStage);
+            }
+          );
+          break;
+        }
+        case "flyline": {
+          if (active) {
             back2Home()
-            sat = new Roaming(viewer3D, {
-              uri: '../../public/models/Satellite.glb',
-              Lines: gerateSatelliteLines(0, 0)
-            }); 
-          }, () => {
-            sat?.EndRoaming()
-          })
+            setFlyline(viewer3D);
+          } else {
+            flyLineDestroy(viewer3D);
+          }
           break
         }
       }

@@ -89,7 +89,7 @@ export default {
         exclusive: true,
         contents: [
           {
-            id: "direct",
+            id: "flyline",
             label: "直飞",
           },
           {
@@ -116,7 +116,7 @@ export default {
 
     const toggle = () => {
       dialogVisible.value = !dialogVisible.value;
-      context.emit("visible", dialogVisible.value);
+      context.emit("update:visible", dialogVisible.value);
     };
 
     const clickHandler = (thisBtn, group) => {
