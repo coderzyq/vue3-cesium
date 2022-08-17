@@ -65,6 +65,10 @@ export default {
             id: "geojson",
             label: "加载geojson",
           },
+          {
+            id: "spreadWall",
+            label: "传播墙"
+          }
         ],
       },
       {
@@ -89,7 +93,7 @@ export default {
         exclusive: true,
         contents: [
           {
-            id: "flyline",
+            id: "direct",
             label: "直飞",
           },
           {

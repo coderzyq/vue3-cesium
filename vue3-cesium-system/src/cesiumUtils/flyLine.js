@@ -46,7 +46,7 @@ const lines = [
 ]
 
 function generateCurve(startPoint, endPoint) {
-    const addPointCartesian = new Cartesian3()
+    const addPointCartesian = new Cesium.Cartesian3()
     //将两个笛卡尔坐标按照分量求和，addPointCartesain是两点(x,y,z)相加后返回的结果(x,y,z)
     Cesium.Cartesian3.add(startPoint, endPoint, addPointCartesian)
     const midPointCartesian = new Cesium.Cartesian3()
@@ -75,7 +75,11 @@ function generateCurve(startPoint, endPoint) {
 export const setFlyline = (viewer, points = lines) => {
     // 终点与飞行线
     points.forEach(({ start, end }) => {
-      const material = new Cesium.PolylineTrailLinkMaterialProperty(30000, 10)
+      const material = new Cesium.PolylineOutlineMaterialProperty({
+        color: Cesium.Color.ORANGE,
+        outlineWidth: 2,
+        outlineColor: Cesium.Color.BLACK,
+      })
       // Cartesian3.fromDegrees经纬度转为笛卡尔坐标位置
       const startPoint = Cesium.Cartesian3.fromDegrees(start.lon, start.lat, 0) 
       // Cartesian3.fromDegrees经纬度转为笛卡尔坐标位置
