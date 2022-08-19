@@ -1,5 +1,5 @@
 import * as Cesium from "cesium"
-
+import WallDiffuseMaterialProperty from './wallDiffuse'
 let wall 
 
 export function WallRegularDiffuse(options) {
@@ -71,7 +71,7 @@ export function WallRegularDiffuse(options) {
           return positions
         }, false),
         // set material
-        material: new Cesium.ColorMaterialProperty({
+        material: new WallDiffuseMaterialProperty({
           color: new Cesium.Color(1.0, 1.0, 0.0, 1.0)
         })
       }

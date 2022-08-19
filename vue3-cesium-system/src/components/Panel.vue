@@ -66,9 +66,25 @@ export default {
             label: "加载geojson",
           },
           {
+            id: "spreadEllipse",
+            label: "高危报警",
+          },
+          {
+            id: "scan",
+            label: "地面雷达",
+          },
+          {
             id: "spreadWall",
-            label: "传播墙"
-          }
+            label: "传播墙",
+          },
+          {
+            id: "riverDynamic",
+            label: "动态河流",
+          },
+          {
+            id: "trackPlane",
+            label: "卫星跟踪",
+          },
         ],
       },
       {

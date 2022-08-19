@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import * as Cesium from "cesium"
+import * as Cesium from "cesium";
 
 import Panel from "@/components/Panel.vue";
 
@@ -16,15 +16,25 @@ import {
   destroyBillboard,
 } from "@/cesiumUtils/randPoints";
 import { addGeoJson, removeGeoJson } from "@/cesiumUtils/geojson";
-import { WallRegularDiffuse, removeWall } from '@/cesiumUtils/wallRegularDiffuse'
+import {
+  WallRegularDiffuse,
+  removeWall,
+} from "@/cesiumUtils/wallRegularDiffuse";
+import { setRiverDynamic } from '@/cesiumUtils/riverDynamic'
+import { setTrackPlane } from '@/cesiumUtils/trackPalne'
 import { setRain, setSnow, setFog } from "@/cesiumUtils/cesiumEffect";
 import { setFlyline, flyLineDestroy } from "@/cesiumUtils/flyLine";
+import {
+  setSpreadEllipse,
+  destroy as SpreadDestroy,
+} from "@/cesiumUtils/spreadEllipse";
+import { setScan } from "@/cesiumUtils/scan";
 
 import * as paths from "@/assets/paths";
 import Roaming from "@/cesiumUtils/satelliteRoaming";
 import gerateSatelliteLines from "@/mocks/satellitePath";
-import ImportPlane from '@/cesiumUtils/importPlane'
-import DrawLines from '@/cesiumUtils/drawLines'
+import ImportPlane from "@/cesiumUtils/importPlane";
+import DrawLines from "@/cesiumUtils/drawLines";
 
 import { ref, onMounted } from "vue";
 import { process } from "ipaddr.js";
@@ -65,28 +75,33 @@ export default {
     };
 
     const setPlanePath = (viewer, arr, pos, addr) => {
-  const plane = new ImportPlane(viewer, {
-    uri: `${process.env.VUE_APP_BUILD_PATH_PREFIX}/models/CesiumAir.glb`,
-    position: arr,
-    addr,
-    arrPos: pos,
-    maxLength: (arr.length - 1),
-    reduce: pos + 1
-  })
-  const line = new DrawLines(viewer, {
-    lines: arr,
-    model: plane.entity
-  })
-  return {
-    plane,
-    line
-  }
-}
-const setRoutes = (type = 'direct') => {
-  const pathArr = paths[type]
-  addresses.push(1)
-  return setPlanePath(viewer3D, pathArr[0], (addresses.length - 1), addresses)
-}
+      const plane = new ImportPlane(viewer, {
+        uri: `${process.env.VUE_APP_BUILD_PATH_PREFIX}/models/CesiumAir.glb`,
+        position: arr,
+        addr,
+        arrPos: pos,
+        maxLength: arr.length - 1,
+        reduce: pos + 1,
+      });
+      const line = new DrawLines(viewer, {
+        lines: arr,
+        model: plane.entity,
+      });
+      return {
+        plane,
+        line,
+      };
+    };
+    const setRoutes = (type = "direct") => {
+      const pathArr = paths[type];
+      addresses.push(1);
+      return setPlanePath(
+        viewer3D,
+        pathArr[0],
+        addresses.length - 1,
+        addresses
+      );
+    };
     const destroyPlaneLine = (flyObj) => {
       if (flyObj) {
         const { plane, line } = flyObj;
@@ -151,38 +166,67 @@ const setRoutes = (type = 'direct') => {
           );
           break;
         }
-        case 'spreadWall': {
-      // 打开geojson更能看出效果
-      CallBack(active, () => {
-        const viewPosition = [116.390646, 39.9126084]
-        viewer3D.camera.flyTo({
-          destination: Cesium.Cartesian3.fromDegrees(
-            viewPosition[0], viewPosition[1] - 0.04,
-            1000
-          ),
-          orientation: {
-          // 指向
-            heading: Cesium.Math.toRadians(0, 0),
-            // 视角
-            pitch: Cesium.Math.toRadians(-20),
-            roll: 0.0
+        case "spreadEllipse": {
+          if (active) {
+            back2Home();
+            setSpreadEllipse(viewer3D);
+          } else {
+            SpreadDestroy(viewer3D);
           }
-        })
-        WallRegularDiffuse({
-          viewer: viewer3D,
-          center: viewPosition,
-          radius: 400.0,
-          edge: 50,
-          height: 50.0,
-          speed: 15,
-          minRidus: 100
-        })
-      }, () => {
-        back2Home()
-        removeWall(viewer3D)
-      })
-      break
-    }
+          break;
+        }
+        case "scan": {
+          back2Home();
+          setScan(viewer3D, !active);
+          break;
+        }
+        case "spreadWall": {
+          // 打开geojson更能看出效果
+          CallBack(
+            active,
+            () => {
+              const viewPosition = [116.390646, 39.9126084];
+              viewer3D.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(
+                  viewPosition[0],
+                  viewPosition[1] - 0.04,
+                  1000
+                ),
+                orientation: {
+                  // 指向
+                  heading: Cesium.Math.toRadians(0, 0),
+                  // 视角
+                  pitch: Cesium.Math.toRadians(-20),
+                  roll: 0.0,
+                },
+              });
+              WallRegularDiffuse({
+                viewer: viewer3D,
+                center: viewPosition,
+                radius: 400.0,
+                edge: 8,
+                height: 50.0,
+                speed: 15,
+                minRidus: 100,
+              });
+            },
+            () => {
+              back2Home();
+              removeWall(viewer3D);
+            }
+          );
+          break;
+        }
+        case "riverDynamic": {
+          back2Home();
+          setRiverDynamic(viewer3D, active);
+          break;
+        }
+        case "trackPlane": {
+          back2Home();
+          setTrackPlane(viewer3D, active);
+          break;
+        }
         case "rain": {
           CallBack(
             active,
