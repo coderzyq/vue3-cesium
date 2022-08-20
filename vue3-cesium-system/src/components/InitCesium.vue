@@ -20,15 +20,16 @@ import {
   WallRegularDiffuse,
   removeWall,
 } from "@/cesiumUtils/wallRegularDiffuse";
-import { setRiverDynamic } from '@/cesiumUtils/riverDynamic'
-import { setTrackPlane } from '@/cesiumUtils/trackPalne'
+import { setRiverDynamic } from "@/cesiumUtils/riverDynamic";
+import { setTrackPlane } from "@/cesiumUtils/trackPalne";
 import { setRain, setSnow, setFog } from "@/cesiumUtils/cesiumEffect";
-import { setFlyline, flyLineDestroy } from "@/cesiumUtils/flyLine";
 import {
   setSpreadEllipse,
   destroy as SpreadDestroy,
 } from "@/cesiumUtils/spreadEllipse";
 import { setScan } from "@/cesiumUtils/scan";
+import { setFlyline, flyLineDestroy } from "@/cesiumUtils/airline";
+import { setRadarStaticScan } from '@/cesiumUtils/radarStaticScan'
 
 import * as paths from "@/assets/paths";
 import Roaming from "@/cesiumUtils/satelliteRoaming";
@@ -215,6 +216,21 @@ export default {
               removeWall(viewer3D);
             }
           );
+          break;
+        }
+        case "flyline": {
+          if (active) {
+            back2Home();
+            setFlyline(viewer3D);
+          } else {
+            flyLineDestroy(viewer3D);
+          }
+          break;
+        }
+        case "radarStatic": {
+          back2Home();
+          setRadarStaticScan(viewer3D, active);
+          setEmitter(viewer3D, active);
           break;
         }
         case "riverDynamic": {

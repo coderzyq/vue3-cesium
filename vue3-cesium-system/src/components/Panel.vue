@@ -78,6 +78,22 @@ export default {
             label: "传播墙",
           },
           {
+            id: "flyline",
+            label: "地图通联",
+          },
+          {
+            id: "radarStatic",
+            label: "菲涅尔区",
+          },
+          {
+            id: "radarDynamic",
+            label: "对空雷达",
+          },
+          {
+            id: "riverFlood",
+            label: "河流淹没",
+          },
+          {
             id: "riverDynamic",
             label: "动态河流",
           },

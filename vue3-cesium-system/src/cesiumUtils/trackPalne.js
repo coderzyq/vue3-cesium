@@ -109,13 +109,13 @@ export const setTrackPlane = (viewer, active) => {
           length: new Cesium.CallbackProperty(() => {
             return Cesium.Cartesian3.distance(startPoint, endPoint);
           }, false),
-          topRadius: 500000,
+          topRadius: 50000,
           bottomRadius: 0,
           material: new WaveMaterialProperty(
             new Cesium.Color(0.1, 1, 0, 0.6),
             10000, // 循环时长
-            2.0, // 速度
-            100, // 圈数
+            1.0, // 速度
+            20, // 圈数
             0.4 // 环高
           ),
         },
