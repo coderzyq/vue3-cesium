@@ -26,11 +26,11 @@ const initCesium = () => {
     const viewer = new Cesium.Viewer("cesiumContainer", {...baseConf });
 
     // Bing地图影像，可以指定mapStyle，详见BingMapsStyle类
-    // var terrainProvider = Cesium.createWorldTerrain({
-    //     requestWaterMask: true, // 请求水体效果所需要的海岸线数据
-    //     requestVertexNormals: true, // 请求地形照明数据
-    // });
-    // viewer.terrainProvider = terrainProvider;
+    const terrainProvider = Cesium.createWorldTerrain({
+        requestWaterMask: true, // 请求水体效果所需要的海岸线数据
+        requestVertexNormals: true, // 请求地形照明数据
+    });
+    viewer.terrainProvider = terrainProvider;
     // viewer.scene.setTerrainExaggeration(2.0); // 地形夸张
     viewer.scene.globe.depthTestAgainstTerrain = true; // 启用深度测试，让地形后面的东西消失。
 

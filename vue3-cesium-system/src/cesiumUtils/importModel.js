@@ -51,7 +51,7 @@ export default class ImportModel {
         modelConf.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(1000, 500000)
     }
     const model = viewer.entities.add(modelConf)
-    return new Promise(model).then((thisModel) => {
+    Promise.resolve(model.readyPromise).then((thisModel) => {
         thisModel.activeAnimations.addAll({
             loop: Cesium.ModelAnimationLoop.REPEAT
         })

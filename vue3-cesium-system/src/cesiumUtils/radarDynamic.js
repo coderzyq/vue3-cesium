@@ -1,11 +1,11 @@
-import * as Cesium from 'cesium'
+import * as Cesium from "cesium"
 import ImportModel from '@/cesiumUtils/importModel'
 
-export const setStaticRadar = (viewer, id, name, position) => {
+export const setRadarDynamic = (viewer, id, name, position) => {
   new ImportModel(
     viewer,
     {
-      uri: `${process.env.VUE_APP_BUILD_PATH_PREFIX}/models/radar_static.gltf`,
+      uri: `${process.env.VUE_APP_BUILD_PATH_PREFIX}/models/radar_dynamic.glb`,
       position,
       conf: {
         id,

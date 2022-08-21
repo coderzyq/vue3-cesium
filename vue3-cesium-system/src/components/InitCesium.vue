@@ -29,7 +29,10 @@ import {
 } from "@/cesiumUtils/spreadEllipse";
 import { setScan } from "@/cesiumUtils/scan";
 import { setFlyline, flyLineDestroy } from "@/cesiumUtils/airline";
-import { setRadarStaticScan } from '@/cesiumUtils/radarStaticScan'
+import { setRadarStaticScan } from "@/cesiumUtils/radarStaticScan";
+import { setEmitter } from "@/cesiumUtils/emitter";
+import { setRadarDynamicScan } from "@/cesiumUtils/radarDynamicScan";
+import { setRiverFlood } from '@/cesiumUtils/riverFlood'
 
 import * as paths from "@/assets/paths";
 import Roaming from "@/cesiumUtils/satelliteRoaming";
@@ -231,6 +234,23 @@ export default {
           back2Home();
           setRadarStaticScan(viewer3D, active);
           setEmitter(viewer3D, active);
+          break;
+        }
+        case "radarDynamic": {
+          if (active) {
+            back2Home();
+            setRadarDynamicScan(viewer3D);
+          } else {
+            viewer3D.entities.removeById("radarD1");
+            viewer3D.entities.removeById("radarScanD1");
+            viewer3D.entities.removeById("yuanzhu");
+            return;
+          }
+          break;
+        }
+        case "riverFlood": {
+          back2Home();
+          setRiverFlood(viewer3D, active);
           break;
         }
         case "riverDynamic": {
